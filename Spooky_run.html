@@ -1,0 +1,634 @@
+<!doctype html><html><head><meta charset=utf8><meta name=viewport content="width=device-width,initial-scale=1,viewport-fit=cover"><style>:root{color-scheme:light;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}html{scroll-padding-top:env(safe-area-inset-top,0px)}body{margin:0;padding:0;font:14px -apple-system,BlinkMacSystemFont,sans-serif;background:#fff;color:#000}img{max-width:100%}[hidden]:not([hidden=until-found i]){display:none!important}</style></head><body>
+<title>The Ghost Run</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Cinzel:wght@500;700;900&family=Inter:wght@400;500;600&display=swap">
+<style>
+  :root{
+    --bg:#0f0a16;
+    --bg2:#181024;
+    --card:#1c1329;
+    --line:#352647;
+    --text:#efe7dc;
+    --muted:#a99bb8;
+    --pumpkin:#ff7a1a;
+    --pumpkin-d:#c75a0a;
+    --ecto:#8dff6a;
+    --blood:#ff5a5a;
+    --bone:#f6efe3;
+    --radius:14px;
+  }
+  *{box-sizing:border-box}
+  :root{color-scheme:dark}
+  body{
+    margin:0;background:var(--bg);color:var(--text);
+    font:16px/1.55 Inter,system-ui,-apple-system,Segoe UI,Roboto,sans-serif;
+    -webkit-font-smoothing:antialiased;
+  }
+  a{color:var(--pumpkin)}
+  .wrap{max-width:1040px;margin:0 auto;padding:0 16px}
+  h1,h2,h3{font-family:Cinzel,Georgia,serif;letter-spacing:.02em;margin:0}
+
+  /* hero */
+  .hero{
+    position:relative;overflow:hidden;
+    padding:56px 0 40px;
+    background:
+      radial-gradient(520px 520px at 82% -8%, rgba(255,122,26,.30), transparent 62%),
+      radial-gradient(700px 300px at 10% 110%, rgba(141,255,106,.10), transparent 70%),
+      linear-gradient(180deg,#1a0f27 0%, var(--bg) 100%);
+    border-bottom:1px solid var(--line);
+  }
+  .moon{
+    position:absolute;right:max(24px,6vw);top:26px;width:104px;height:104px;border-radius:50%;
+    background:radial-gradient(circle at 35% 35%, #fff7e6 0 40%, #ffd9a0 70%, #f0a850 100%);
+    box-shadow:0 0 90px 24px rgba(255,160,60,.35);opacity:.92;
+  }
+  .bats{position:absolute;right:max(40px,12vw);top:34px;width:210px;height:90px;pointer-events:none}
+  .kicker{color:var(--pumpkin);font-weight:600;letter-spacing:.14em;text-transform:uppercase;font-size:.78rem}
+  .hero h1{font-size:clamp(2.2rem,6.2vw,3.9rem);font-weight:900;line-height:1.05;margin:10px 0 12px;max-width:14ch}
+  .hero h1 em{font-style:normal;color:var(--pumpkin);text-shadow:0 0 28px rgba(255,122,26,.45)}
+  .hero p.sub{max-width:58ch;color:#d4c8e0;margin:0 0 26px;font-size:1.05rem}
+
+  .stats{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;max-width:760px}
+  .stat{background:rgba(28,19,41,.8);border:1px solid var(--line);border-radius:var(--radius);padding:14px 16px;backdrop-filter:blur(4px)}
+  .stat .n{font:900 1.7rem/1.1 Cinzel,Georgia,serif;color:var(--bone)}
+  .stat .n small{font-size:.9rem;font-weight:500;color:var(--muted)}
+  .stat .l{font-size:.78rem;color:var(--muted);margin-top:4px;text-transform:uppercase;letter-spacing:.08em}
+  .stat.hot .n{color:var(--pumpkin)}
+
+  section{padding:36px 0}
+  section h2{font-size:1.6rem;margin-bottom:6px}
+  section .lede{color:var(--muted);margin:0 0 18px;max-width:64ch}
+
+  /* planner */
+  .planner{background:var(--card);border:1px solid var(--line);border-radius:var(--radius);padding:18px;display:grid;gap:18px;grid-template-columns:repeat(2,1fr)}
+  .field label{display:flex;justify-content:space-between;font-size:.82rem;color:var(--muted);text-transform:uppercase;letter-spacing:.08em;margin-bottom:8px}
+  .field label b{color:var(--bone);font-weight:600;text-transform:none;letter-spacing:0;font-size:.95rem}
+  .timerow{display:flex;gap:8px;align-items:stretch}
+  .timerow .chip{min-width:56px;padding:9px 12px}
+  select,input[type=time]{
+    width:100%;background:var(--bg2);color:var(--text);border:1px solid var(--line);border-radius:10px;
+    padding:11px 12px;font:inherit;min-height:44px;
+  }
+  input[type=range]{width:100%;accent-color:var(--pumpkin);min-height:32px}
+  .presets{display:flex;gap:8px;flex-wrap:wrap;grid-column:1/-1}
+  .chip{
+    background:var(--bg2);color:var(--text);border:1px solid var(--line);border-radius:999px;
+    padding:9px 16px;font:inherit;font-size:.9rem;cursor:pointer;min-height:40px;
+  }
+  .chip:hover{border-color:var(--pumpkin)}
+  .chip[aria-pressed=true]{background:var(--pumpkin);color:#1b0d00;border-color:var(--pumpkin);font-weight:600}
+  .fine{font-size:.82rem;color:var(--muted);grid-column:1/-1;margin:0}
+
+  /* map */
+  #map{min-height:320px;border-radius:var(--radius);border:1px solid var(--line);background:#120c1b;overflow:hidden}
+  .maprow{display:flex;gap:10px;flex-wrap:wrap;align-items:center;margin-top:12px}
+  .btn{
+    display:inline-flex;align-items:center;gap:8px;background:var(--pumpkin);color:#1b0d00;text-decoration:none;
+    border:0;border-radius:10px;padding:11px 16px;font-weight:600;min-height:44px;font-size:.95rem;cursor:pointer;
+  }
+  .btn.ghost{background:transparent;color:var(--text);border:1px solid var(--line)}
+  .src{font-size:.82rem;color:var(--muted)}
+  .schem{background:#0e1d2b;padding:0;overflow:hidden}
+  .schem svg{width:100%;max-height:760px;height:auto;display:block}
+
+  /* legs table */
+  .legs{width:100%;border-collapse:collapse;font-size:.95rem}
+  .legs th{font-size:.74rem;text-transform:uppercase;letter-spacing:.09em;color:var(--muted);text-align:left;padding:8px 10px;border-bottom:1px solid var(--line)}
+  .legs td{padding:12px 10px;border-bottom:1px solid var(--line);vertical-align:top}
+  .legs td.num{white-space:nowrap;font-variant-numeric:tabular-nums}
+  .legs td.cue{color:#d9cfe6}
+  .legs tr.total td{font-weight:600;color:var(--bone);border-bottom:0}
+  .tablewrap{background:var(--card);border:1px solid var(--line);border-radius:var(--radius);padding:6px 8px;overflow-x:auto}
+
+  /* stops */
+  .stops{display:grid;gap:16px}
+  .stop{background:var(--card);border:1px solid var(--line);border-radius:var(--radius);padding:20px;display:grid;grid-template-columns:56px 1fr;gap:16px}
+  .badge{
+    width:48px;height:48px;border-radius:50%;display:grid;place-items:center;
+    background:radial-gradient(circle at 35% 30%, #ffa04d, var(--pumpkin) 55%, var(--pumpkin-d));
+    color:#1b0d00;font:900 1.25rem Cinzel,serif;box-shadow:0 0 20px rgba(255,122,26,.4)
+  }
+  .stop h3{font-size:1.25rem;line-height:1.2}
+  .addr{color:var(--muted);font-size:.9rem;margin:2px 0 10px}
+  .meta{display:flex;flex-wrap:wrap;gap:8px;margin:0 0 12px}
+  .tag{font-size:.78rem;padding:3px 10px;border-radius:12px;border:1px solid var(--line);color:var(--muted)}
+  .stop > div{min-width:0}
+  .tag.ok{color:var(--ecto);border-color:rgba(141,255,106,.4)}
+  .tag.no{color:var(--blood);border-color:rgba(255,90,90,.45)}
+  .tag.ext{color:#ffd37a;border-color:rgba(255,211,122,.4)}
+  .facts{margin:0;padding:0;list-style:none;display:grid;gap:8px}
+  .facts li{padding-left:0}
+  .facts .k{
+    display:inline-block;font-size:.68rem;font-weight:700;letter-spacing:.08em;text-transform:uppercase;
+    padding:1px 7px;border-radius:5px;margin-right:8px;vertical-align:1px
+  }
+  .k.real{background:rgba(141,255,106,.14);color:var(--ecto)}
+  .k.leg{background:rgba(255,122,26,.16);color:var(--pumpkin)}
+  .stop .bail{margin-top:12px;font-size:.88rem;color:var(--muted)}
+  .stop .bail b{color:var(--text);font-weight:600}
+  .fright{margin-top:10px;font-size:.82rem;color:var(--muted)}
+  .fright .sk{letter-spacing:2px;color:var(--pumpkin);font-size:.95rem}
+  .fright .sk i{font-style:normal;opacity:.22}
+  .eta{font:700 1.05rem Cinzel,serif;color:var(--bone)}
+
+  /* events */
+  .events{display:grid;grid-template-columns:repeat(2,1fr);gap:14px}
+  .ev{background:linear-gradient(160deg,#241636,var(--card));border:1px solid var(--line);border-radius:var(--radius);padding:18px}
+  .ev h3{font-size:1.1rem;margin-bottom:6px}
+  .ev .when{color:var(--pumpkin);font-weight:600;font-size:.9rem;margin-bottom:8px}
+  .ev p{margin:0;color:#d4c8e0;font-size:.95rem}
+
+  footer{padding:30px 0 56px;color:var(--muted);font-size:.85rem;border-top:1px solid var(--line)}
+  footer p{margin:6px 0}
+
+  @media (max-width:720px){
+    .hero{padding:78px 0 30px}
+    .moon{width:56px;height:56px;top:14px;right:16px}
+    .bats{display:none}
+    .stats{grid-template-columns:repeat(2,1fr)}
+    .planner,.events{grid-template-columns:1fr}
+    .stop{grid-template-columns:1fr}
+    .badge{width:42px;height:42px}
+  }
+  @media (prefers-reduced-motion:no-preference){
+    .moon{animation:glow 6s ease-in-out infinite alternate}
+    @keyframes glow{from{box-shadow:0 0 70px 18px rgba(255,160,60,.28)}to{box-shadow:0 0 110px 34px rgba(255,160,60,.42)}}
+  }
+</style>
+
+<header class="hero">
+  <div class="moon" aria-hidden="true"></div>
+  <svg class="bats" viewBox="0 0 210 90" aria-hidden="true" fill="#0b0710">
+    <path d="M20 40c8-14 18-14 24-4 4-6 12-6 16 0 6-10 16-10 24 4-10-4-14 0-18 8-4-8-8-10-14-4-6-6-10-4-14 4-4-8-8-12-18-8z" transform="translate(0,8)"/>
+    <path d="M120 20c6-10 14-10 18-3 3-4 9-4 12 0 4-7 12-7 18 3-8-3-11 0-14 6-3-6-6-7-10-3-4-4-8-3-10 3-3-6-6-9-14-6z" transform="translate(10,16) scale(.8)"/>
+    <path d="M150 62c5-8 11-8 15-2 2-3 7-3 9 0 3-6 9-6 14 2-6-2-9 0-11 5-2-5-5-6-8-3-3-3-6-2-8 3-2-5-5-7-11-5z" transform="translate(-4,-4) scale(.9)"/>
+  </svg>
+  <div class="wrap">
+    <div class="kicker">Lower Manhattan · Halloween season</div>
+    <h1>The <em>Ghost</em> Run</h1>
+    <p class="sub">Nine haunted stops from Wall Street to the East Village: graveyards, a Ghostbusters firehouse, ghost-story pubs and one very old house. Pick your pace and start time and the page works out your timing, with every stop checked against its opening hours.</p>
+    <div class="stats" aria-live="polite">
+      <div class="stat"><div class="n" id="sDist">4.3<small> mi</small></div><div class="l">Distance</div></div>
+      <div class="stat"><div class="n" id="sRun">0<small> min</small></div><div class="l">Running time</div></div>
+      <div class="stat"><div class="n" id="sTotal">0<small> min</small></div><div class="l">With stops</div></div>
+      <div class="stat hot"><div class="n" id="sFinish">—</div><div class="l">Finish at McSorley's</div></div>
+    </div>
+  </div>
+</header>
+
+<main class="wrap">
+
+<section aria-labelledby="planH">
+  <h2 id="planH">Set your pace</h2>
+  <p class="lede">Everything below recalculates as you move the sliders. The default is an easy 10:00/mile with 4 minutes at each stop for photos and reading plaques.</p>
+  <div class="planner">
+    <div class="field">
+      <label for="day">Day <b id="dayNote"></b></label>
+      <select id="day">
+        <option value="0">Sunday</option><option value="1">Monday</option><option value="2">Tuesday</option>
+        <option value="3">Wednesday</option><option value="4">Thursday</option><option value="5" selected>Friday</option>
+        <option value="6">Saturday</option>
+      </select>
+    </div>
+    <div class="field">
+      <label for="start">Start time at Trinity Church <b id="startOut"></b></label>
+      <div class="timerow">
+        <button class="chip" id="tminus" type="button" aria-label="Start 15 minutes earlier">−15</button>
+        <input type="time" id="start" value="11:30">
+        <button class="chip" id="tplus" type="button" aria-label="Start 15 minutes later">+15</button>
+      </div>
+    </div>
+    <div class="field">
+      <label for="pace">Running pace <b id="paceOut"></b></label>
+      <input type="range" id="pace" min="390" max="840" step="15" value="600">
+    </div>
+    <div class="field">
+      <label for="stopmin">Time at each stop <b id="stopOut"></b></label>
+      <input type="range" id="stopmin" min="0" max="15" step="1" value="4">
+    </div>
+    <div class="presets" id="pacePresets" role="group" aria-label="Pace presets">
+      <button class="chip" data-pace="720" data-stop="6" aria-pressed="false">Ghost jog · 12:00/mi</button>
+      <button class="chip" data-pace="600" data-stop="4" aria-pressed="true">Steady · 10:00/mi</button>
+      <button class="chip" data-pace="510" data-stop="2" aria-pressed="false">Spirited · 8:30/mi</button>
+      <button class="chip" data-pace="450" data-stop="1" aria-pressed="false">Hunted · 7:30/mi</button>
+    </div>
+    <div class="presets" id="startPresets" role="group" aria-label="Start time presets">
+      <button class="chip" data-start="480" type="button" aria-pressed="false">Early · 8:00 AM</button>
+      <button class="chip" data-start="690" type="button" aria-pressed="true">Late morning · 11:30 AM</button>
+      <button class="chip" data-start="840" type="button" aria-pressed="false">Afternoon · 2:00 PM</button>
+      <button class="chip" data-start="1020" type="button" aria-pressed="false">Dusk · 5:00 PM</button>
+    </div>
+    <p class="fine">Stop times are spent before moving on to the next stop. Opening hours were pulled from Google Places in October 2026; confirm before you go, especially for the museum and monument.</p>
+  </div>
+</section>
+
+<section aria-labelledby="mapH">
+  <h2 id="mapH">The route</h2>
+  <p class="lede">An illustrated map of the route. Each stop shows the time you will reach it, and it updates when you change your start time. Use the Google Maps button for turn-by-turn street directions.</p>
+  <div id="map"></div>
+  <div class="maprow">
+    <a class="btn" id="gmaps" href="#" target="_blank" rel="noopener">Open in Google Maps</a>
+    <span class="src" id="routeSrc"></span>
+  </div>
+</section>
+
+<section aria-labelledby="legH">
+  <h2 id="legH">Leg by leg</h2>
+  <p class="lede">Distances are estimates along the street grid, not GPS measurements.</p>
+  <div class="tablewrap">
+    <table class="legs">
+      <thead><tr><th>Leg</th><th>Miles</th><th>Run</th><th>Arrive</th><th>Which way</th></tr></thead>
+      <tbody id="legBody"></tbody>
+    </table>
+  </div>
+</section>
+
+<section aria-labelledby="stopH">
+  <h2 id="stopH">The nine stops</h2>
+  <p class="lede"><span class="k real" style="padding:1px 7px;border-radius:5px;font-size:.68rem;font-weight:700;letter-spacing:.08em">DOCUMENTED</span> marks the historical record. <span class="k leg" style="padding:1px 7px;border-radius:5px;font-size:.68rem;font-weight:700;letter-spacing:.08em">LEGEND</span> marks ghost stories and folklore, which we are happy to repeat but cannot vouch for.</p>
+  <div class="stops" id="stops"></div>
+</section>
+
+<section aria-labelledby="evH">
+  <h2 id="evH">This season</h2>
+  <p class="lede">Two Halloween events that line up with the route.</p>
+  <div class="events">
+    <div class="ev">
+      <h3>Merchant's House candlelight ghost tours</h3>
+      <div class="when">Listed for Fri, Oct 16, 2026 · $45 ($35 members)</div>
+      <p>The museum runs after-hours tours of the house by candlelight. The ticket page gave a date and price but not a start time, so check the museum's site before planning your evening around it.</p>
+    </div>
+    <div class="ev">
+      <h3>Village Halloween Parade</h3>
+      <div class="when">Sat, Oct 31, 2026 · 7 PM, up Sixth Avenue</div>
+      <p>Lines up at Canal St and Sixth Ave and marches north along Sixth to 15th St. Our route stays west and east of Sixth, but expect crowds and closures nearby, so run it earlier in the day.</p>
+    </div>
+  </div>
+</section>
+
+</main>
+
+<footer>
+  <div class="wrap">
+    <p><b>Notes.</b> Leg distances and times are estimates from street-grid geometry, not GPS measurements. Fright levels are our own rating. Ear Inn's building date is given as the Landmarks Commission's c.1817; the pub itself claims 1770.</p>
+    <p><b>Sources.</b>
+      <a href="https://hoodline.com/2026/09/village-halloween-parade-reveals-body-soul-theme-for-53rd-march/">Hoodline: Village Halloween Parade</a> ·
+      <a href="https://www.zeffy.com/en-US/ticketing/candlelight-ghost-tours--2026-2">Merchant's House candlelight ghost tours tickets</a> ·
+      Stop hours and coordinates from Google Places.
+    </p>
+    <p>Run safe: use crosswalks, carry ID for the pubs, and give the African Burial Ground and the churchyards the quiet they deserve.</p>
+  </div>
+</footer>
+
+<script>
+(function(){
+  "use strict";
+
+  // ---------- data ----------
+  var H = function(o,c){return [o*60,c*60];}; // hours -> minutes
+  var daily = function(o,c){return [H(o,c),H(o,c),H(o,c),H(o,c),H(o,c),H(o,c),H(o,c)];};
+  // index 0 = Sunday ... 6 = Saturday; null = closed. Close times past 24 mean after midnight.
+  var STOPS = [
+    { name:"Trinity Churchyard", short:"Trinity Churchyard", addr:"89 Broadway · Broadway & Wall St", lat:40.7078931, lng:-74.0117901, fright:2,
+      hours:daily(8.5,18), hoursTxt:"Daily 8:30 AM – 6 PM", kind:"yard",
+      facts:[
+        {r:1,t:"Alexander Hamilton is buried here, along with his wife Eliza and her sister Angelica Schuyler Church."},
+        {r:1,t:"The 281-foot Gothic Revival steeple made this church one of the tallest structures in the city for decades."},
+        {r:1,t:"Optional detour: 23 Wall St (a block east) still carries pockmarks from the 1920 Wall Street bombing. That adds about 0.15 miles."}
+      ],
+      bail:"4/5 Wall St · 2/3 Wall St · R/W Rector St" },
+    { name:"African Burial Ground National Monument", short:"African Burial Ground", addr:"290 Broadway · memorial at Duane & Elk St", lat:40.714538, lng:-74.0044649, fright:3,
+      hours:[H(10,16),null,null,H(10,16),H(10,16),H(10,16),H(10,16)], hoursTxt:"Wed – Sun 10 AM – 4 PM", kind:"site",
+      facts:[
+        {r:1,t:"Construction for a federal building uncovered the burial ground in 1991. An estimated 15,000 enslaved and free Africans were buried here in the 1600s and 1700s."},
+        {r:1,t:"It is now a National Park Service monument. Slow to a walk here and keep it quiet."}
+      ],
+      bail:"4/5/6 Brooklyn Bridge–City Hall · R/W City Hall · J/Z Chambers St" },
+    { name:"Hook & Ladder 8: the Ghostbusters Firehouse", short:"Ghostbusters Firehouse", addr:"14 N Moore St, Tribeca", lat:40.719559, lng:-74.0066219, fright:1,
+      hours:daily(0,24), hoursTxt:"Working firehouse, always staffed", kind:"ext",
+      facts:[
+        {r:1,t:"The firehouse dates to 1903. Its exterior was filmed for the original Ghostbusters (1984), but the interior was not."},
+        {r:1,t:"It is an active FDNY station. Take your photo from the sidewalk and keep clear of the apparatus doors."}
+      ],
+      bail:"1 Franklin St · A/C/E Canal St" },
+    { name:"The Ear Inn", short:"Ear Inn", addr:"326 Spring St · at Greenwich St", lat:40.7259222, lng:-74.0094833, fright:3,
+      hours:daily(11.5,28), hoursTxt:"Daily 11:30 AM – 4 AM", kind:"pub",
+      facts:[
+        {r:1,t:"The Landmarks Commission dates the building to about 1817 (the pub claims 1770), which makes it one of the oldest surviving buildings in the city."},
+        {r:0,t:"A sailor ghost named Mickey is said to haunt the place and gets blamed for every odd happening."},
+        {r:0,t:"Pub lore: the name came from repainting the old neon BAR sign to read EAR instead of applying for a new sign permit."}
+      ],
+      bail:"1 Houston St (0.3 mi) · C/E Spring St (0.4 mi)" },
+    { name:"White Horse Tavern", short:"White Horse Tavern", addr:"567 Hudson St · at W 11th St", lat:40.7356977, lng:-74.006192, fright:3,
+      hours:[H(11,24),H(12,24),H(12,24),H(12,24),H(12,26.5),H(12,27.5),H(12,27.5)], hoursTxt:"Opens noon (11 AM Sun) · late Thu – Sat", kind:"pub",
+      facts:[
+        {r:1,t:"The tavern dates to 1880 and was a Village literary hangout. Poet Dylan Thomas drank here shortly before he died in New York in 1953, and Jack Kerouac was a regular."},
+        {r:0,t:"The famous claim that Thomas downed 18 straight whiskies here is a story that has never been proven."},
+        {r:1,t:"This is the northernmost point of the run."}
+      ],
+      bail:"1 Christopher St–Sheridan Sq (0.3 mi) · A/C/E/L 14 St–8 Av" },
+    { name:"Washington Square Park", short:"Washington Sq Park", addr:"Greenwich Village · the arch at Fifth Ave", lat:40.7308838, lng:-73.997332, fright:5,
+      hours:daily(6,24), hoursTxt:"Daily 6 AM – midnight", kind:"yard",
+      facts:[
+        {r:1,t:"Much of the park was a potter's field from the 1790s into the 1820s. An estimated 20,000 people are buried beneath it."},
+        {r:1,t:"Utility and park work have turned up burial vaults and remains more than once."},
+        {r:0,t:"The Hangman's Elm, one of the oldest trees in Manhattan, is said to have been used for hangings. Historians dispute it."},
+        {r:1,t:"Run a lap around the arch before you head east."}
+      ],
+      bail:"A/C/E/B/D/F/M W 4 St–Wash Sq" },
+    { name:"Merchant's House Museum", short:"Merchant\'s House", addr:"29 E 4th St · between Lafayette & the Bowery", lat:40.727665, lng:-73.99234, fright:5,
+      hours:[H(12,17),null,null,H(12,17),H(12,17),H(12,17),H(12,17)], hoursTxt:"Wed – Sun 12 – 5 PM", kind:"site",
+      facts:[
+        {r:1,t:"Built in 1832. The Tredwell family lived here from 1835 for about a century, and nearly everything inside is original to them: furniture, clothing and mourning jewelry."},
+        {r:1,t:"It was the first building in Manhattan to be designated a landmark after the city's 1965 landmarks law."},
+        {r:0,t:"Visitors report cold spots, footsteps and voices. The museum bills it as Manhattan's most haunted house."}
+      ],
+      bail:"6 Bleecker St · B/D/F/M Broadway–Lafayette" },
+    { name:"St. Mark's Church in-the-Bowery", short:"St. Mark\'s Church", addr:"131 E 10th St · at Second Ave", lat:40.7303933, lng:-73.9870892, fright:4,
+      hours:[H(9,16),H(10,16),H(10,16),H(10,16),H(10,16),H(10,16),null], hoursTxt:"Mon – Fri 10 AM – 4 PM · Sun 9 AM – 4 PM · closed Sat", kind:"site",
+      facts:[
+        {r:1,t:"The church stands on the grounds of Peter Stuyvesant's farm, and the last Dutch governor of New Amsterdam is buried here. The churchyard also holds the grave of Daniel Tompkins, vice president under James Monroe."},
+        {r:0,t:"Stuyvesant's ghost is said to stomp around the grounds on his famous wooden leg."}
+      ],
+      bail:"6 Astor Pl · N/R/W 8 St–NYU" },
+    { name:"McSorley's Old Ale House", short:"McSorley\'s", addr:"15 E 7th St · near Cooper Square", lat:40.7288053, lng:-73.9896791, fright:2,
+      hours:[H(12,25),H(11,25),H(11,25),H(11,25),H(11,25),H(11,25),H(11,25)], hoursTxt:"Mon – Sat 11 AM – 1 AM · Sun noon – 1 AM", kind:"pub",
+      facts:[
+        {r:1,t:"The bar claims an 1854 opening, and it kept its sawdust floor and its menu of light or dark ale. Women were admitted only in 1970, after a court ruling."},
+        {r:0,t:"Wishbones hang over the bar. The story goes that soldiers hung them before shipping out to war, and those who came home took theirs down."},
+        {r:1,t:"The finish line. Bring ID and a few dollars."}
+      ],
+      bail:"6 Astor Pl · N/R/W 8 St–NYU" }
+  ];
+
+  // Street-grid estimates (miles) and directions for each leg.
+  var LEGS = [
+    { mi:0.60, cue:"North on Broadway to Duane St. The memorial sits just east of Broadway, behind the federal building." },
+    { mi:0.52, cue:"West on Duane St, north up West Broadway to North Moore St. The firehouse is at 14 N Moore, near Varick St." },
+    { mi:0.66, cue:"West on N Moore to Hudson St, north on Hudson to Spring St, then a block west to the Ear Inn at Greenwich St." },
+    { mi:0.85, cue:"Back east a block to Hudson St, then north through the West Village to W 11th St. The tavern is on the corner." },
+    { mi:0.63, cue:"Head east and south through the Village to the park (W 4th St or Waverly Pl both lead in). Stop at the arch." },
+    { mi:0.40, cue:"Cross the park to its east side, continue east to Broadway, then follow E 4th St toward the Bowery." },
+    { mi:0.45, cue:"East to the Bowery, north to Astor Place, east on St Marks Pl (E 8th) to Second Ave, north to E 10th St." },
+    { mi:0.23, cue:"South on Second Ave to E 7th St, then west to 15 E 7th, near Cooper Square. Finish." }
+  ];
+  var legSrc = "estimate";
+
+  // ---------- state & helpers ----------
+  var $ = function(id){return document.getElementById(id);};
+  var DAYS = ["Sunday","Monday","Tuesday","Wednesday","Thursday","Friday","Saturday"];
+  var st = { day:5, start:11*60+30, pace:600, stopmin:4 };
+
+  function clock(m){
+    m = ((Math.round(m)%1440)+1440)%1440;
+    var h = Math.floor(m/60), mm = m%60, ap = h>=12?"PM":"AM";
+    h = h%12; if(h===0) h=12;
+    return h+":"+(mm<10?"0":"")+mm+" "+ap;
+  }
+  function dur(m){
+    m = Math.round(m);
+    if(m<60) return m+" min";
+    var h=Math.floor(m/60), r=m%60;
+    return h+" hr"+(r?" "+r+" min":"");
+  }
+  function paceTxt(s){ return Math.floor(s/60)+":"+("0"+(s%60)).slice(-2)+" /mi"; }
+  function isOpen(stop, day, t){
+    var d = stop.hours[day];
+    if(d && t>=d[0] && t<d[1]) return true;
+    var prev = stop.hours[(day+6)%7];
+    if(prev && prev[1]>1440 && t < prev[1]-1440) return true;
+    // arrival after midnight on a late-night run
+    if(t>=1440){ return isOpen(stop,(day+1)%7,t-1440); }
+    return false;
+  }
+  function totalMiles(){ return LEGS.reduce(function(a,l){return a+l.mi;},0); }
+
+  // Compute arrival times (in minutes since midnight of chosen day) for each stop.
+  function schedule(){
+    var arr=[], t=st.start;
+    for(var i=0;i<STOPS.length;i++){
+      arr.push(t);
+      if(i<LEGS.length) t += st.stopmin + LEGS[i].mi*st.pace/60;
+    }
+    return arr;
+  }
+
+  // ---------- render: stops ----------
+  function frightHTML(n){
+    var s=""; for(var i=0;i<5;i++) s += i<n ? "&#9679;" : "<i>&#9679;</i>";
+    return '<span class="sk" aria-label="'+n+' out of 5">'+s+'</span>';
+  }
+  function buildStops(){
+    var el=$("stops"), html="";
+    STOPS.forEach(function(s,i){
+      html += '<article class="stop" id="stop'+i+'">'+
+        '<div class="badge" aria-hidden="true">'+(i+1)+'</div>'+
+        '<div>'+
+          '<h3>'+s.name+'</h3>'+
+          '<div class="addr">'+s.addr+'</div>'+
+          '<div class="meta" id="meta'+i+'"></div>'+
+          '<ul class="facts">'+
+            s.facts.map(function(f){
+              return '<li><span class="k '+(f.r?"real":"leg")+'">'+(f.r?"Documented":"Legend")+'</span>'+f.t+'</li>';
+            }).join("")+
+          '</ul>'+
+          '<div class="fright">Fright level (our rating) '+frightHTML(s.fright)+'</div>'+
+          '<div class="bail"><b>Bail-out subway:</b> '+s.bail+'</div>'+
+        '</div></article>';
+    });
+    el.innerHTML = html;
+  }
+
+  // ---------- render: legs ----------
+  function renderLegs(arr){
+    var rows="", tot=totalMiles();
+    LEGS.forEach(function(l,i){
+      rows += '<tr><td class="num"><b>'+(i+1)+'</b> → <b>'+(i+2)+'</b></td>'+
+        '<td class="num">'+l.mi.toFixed(2)+'</td>'+
+        '<td class="num">'+dur(l.mi*st.pace/60)+'</td>'+
+        '<td class="num">'+clock(arr[i+1])+'</td>'+
+        '<td class="cue">'+l.cue+'</td></tr>';
+    });
+    rows += '<tr class="total"><td>Total</td><td class="num">'+tot.toFixed(2)+'</td><td class="num">'+dur(tot*st.pace/60)+'</td><td></td><td></td></tr>';
+    $("legBody").innerHTML = rows;
+  }
+
+  // ---------- render: stats, badges ----------
+  function render(){
+    var arr = schedule();
+    var tot = totalMiles();
+    var run = tot*st.pace/60;
+    var total = run + st.stopmin*(STOPS.length-1);
+
+    $("sDist").innerHTML = tot.toFixed(1)+"<small> mi</small>";
+    $("sRun").innerHTML = dur(run).replace(/(\d+) (hr|min)/g,'$1<small> $2</small>');
+    $("sTotal").innerHTML = dur(total).replace(/(\d+) (hr|min)/g,'$1<small> $2</small>');
+    $("sFinish").textContent = clock(arr[arr.length-1]);
+    $("paceOut").textContent = paceTxt(st.pace);
+    $("stopOut").textContent = st.stopmin+" min";
+    $("dayNote").textContent = "";
+    $("startOut").textContent = clock(st.start);
+
+    var closedCount=0;
+    STOPS.forEach(function(s,i){
+      var open = isOpen(s, st.day, arr[i]);
+      var tags = '<span class="tag eta">'+clock(arr[i])+'</span>';
+      if(s.kind==="ext"){
+        tags += '<span class="tag ext">Exterior stop</span>';
+      } else if(s.kind==="yard"){
+        tags += open ? '<span class="tag ok">Open on arrival</span>' : '<span class="tag no">Closed on arrival</span>';
+      } else {
+        tags += open ? '<span class="tag ok">Open on arrival</span>' : '<span class="tag no">Closed on arrival</span>';
+        if(!open) closedCount++;
+        if(!open && s.kind!=="pub") tags += '<span class="tag ext">Exterior still visible</span>';
+      }
+      tags += '<span class="tag">'+s.hoursTxt+'</span>';
+      $("meta"+i).innerHTML = tags;
+    });
+    if(closedCount){
+      $("dayNote").textContent = closedCount+" stop"+(closedCount>1?"s":"")+" closed on arrival";
+    } else {
+      $("dayNote").textContent = "all open on arrival";
+    }
+    renderLegs(arr);
+    updateEtas(arr);
+  }
+
+  // ---------- controls ----------
+  function parseStart(v){ var p=v.split(":"); return (+p[0])*60 + (+p[1]||0); }
+  $("day").addEventListener("change",function(e){ st.day=+e.target.value; render(); });
+  function setStart(m){
+    m=((Math.round(m)%1440)+1440)%1440; st.start=m;
+    var h=Math.floor(m/60), mm=m%60;
+    $("start").value=(h<10?"0":"")+h+":"+(mm<10?"0":"")+mm;
+    syncStartPresets(); render();
+  }
+  function syncStartPresets(){
+    document.querySelectorAll("#startPresets .chip").forEach(function(c){
+      c.setAttribute("aria-pressed", (+c.dataset.start===st.start)?"true":"false");
+    });
+  }
+  $("start").addEventListener("input",function(e){ if(e.target.value){ st.start=parseStart(e.target.value); syncStartPresets(); render(); } });
+  $("tminus").addEventListener("click",function(){ setStart(st.start-15); });
+  $("tplus").addEventListener("click",function(){ setStart(st.start+15); });
+  document.querySelectorAll("#startPresets .chip").forEach(function(c){
+    c.addEventListener("click",function(){ setStart(+c.dataset.start); });
+  });
+  $("pace").addEventListener("input",function(e){ st.pace=+e.target.value; syncPresets(); render(); });
+  $("stopmin").addEventListener("input",function(e){ st.stopmin=+e.target.value; syncPresets(); render(); });
+  var chips = document.querySelectorAll(".presets:not(#startPresets) .chip");
+  function syncPresets(){
+    chips.forEach(function(c){
+      c.setAttribute("aria-pressed", (+c.dataset.pace===st.pace && +c.dataset.stop===st.stopmin) ? "true":"false");
+    });
+  }
+  chips.forEach(function(c){
+    c.addEventListener("click",function(){
+      st.pace=+c.dataset.pace; st.stopmin=+c.dataset.stop;
+      $("pace").value=st.pace; $("stopmin").value=st.stopmin;
+      syncPresets(); render();
+    });
+  });
+
+  // ---------- Google Maps link ----------
+  function gmapsURL(){
+    var pt=function(s){return s.lat+","+s.lng;};
+    var wp = STOPS.slice(1,-1).map(pt).join("|");
+    return "https://www.google.com/maps/dir/?api=1&travelmode=walking&origin="+pt(STOPS[0])+
+           "&destination="+pt(STOPS[STOPS.length-1])+"&waypoints="+encodeURIComponent(wp);
+  }
+  $("gmaps").href = gmapsURL();
+
+  // ---------- map: illustrated mockup. Stops sit at their true coordinates; shorelines, parks and avenues are approximate. ----------
+  var etaEls=[];
+  function updateEtas(arr){
+    for(var i=0;i<etaEls.length;i++){ if(etaEls[i]) etaEls[i].textContent=clock(arr[i]); }
+  }
+  function mockMap(){
+    var el=$("map"); el.className="schem";
+    var lat0=40.7195, lng0=-74.0030, th=29*Math.PI/180;
+    var kx=111320*Math.cos(lat0*Math.PI/180), ky=110574;
+    function pr(lat,lng){
+      var x=(lng-lng0)*kx, y=(lat-lat0)*ky;
+      return { x: x*Math.cos(th)-y*Math.sin(th), y: -(x*Math.sin(th)+y*Math.cos(th)) };
+    }
+    function pts(a){ return a.map(function(q){var p=pr(q[0],q[1]); return p.x.toFixed(0)+","+p.y.toFixed(0);}).join(" "); }
+    function path(a){ return "M"+pts(a).replace(/ /g," L"); }
+    var P=STOPS.map(function(s){return pr(s.lat,s.lng);});
+    var xs=P.map(function(p){return p.x;}), ys=P.map(function(p){return p.y;});
+    var minx=Math.min.apply(null,xs)-420, maxx=Math.max.apply(null,xs)+380;
+    var miny=Math.min.apply(null,ys)-230, maxy=Math.max.apply(null,ys)+260;
+    var w=maxx-minx, h=maxy-miny;
+
+    // land outline: Hudson shore (south to north), north cap, East River shore (north to south), Battery tip
+    var hudson=[[40.7030,-74.0165],[40.7090,-74.0188],[40.7130,-74.0190],[40.7170,-74.0165],[40.7200,-74.0145],[40.7235,-74.0130],[40.7290,-74.0108],[40.7340,-74.0104],[40.7410,-74.0092],[40.7470,-74.0080]];
+    var east=[[40.7470,-73.9700],[40.7350,-73.9730],[40.7250,-73.9740],[40.7165,-73.9745],[40.7137,-73.9726],[40.7120,-73.9860],[40.7112,-73.9930],[40.7105,-73.9980],[40.7077,-74.0000],[40.7053,-74.0035],[40.7033,-74.0075],[40.7008,-74.0100],[40.7005,-74.0135]];
+    var hP=hudson.map(function(q){return pr(q[0],q[1]);}), eP=east.map(function(q){return pr(q[0],q[1]);});
+    var hl=hP[hP.length-1], el0=eP[0];
+    var landPath=path(hudson)+" L"+hl.x.toFixed(0)+","+(hl.y-5000)+" L"+el0.x.toFixed(0)+","+(el0.y-5000)+" L"+pts(east).replace(/ /g," L")+" Z";
+    var shorePath=path(hudson)+" "+path(east);
+
+    // grid texture (rotated to the street grid), clipped to land
+    var g="";
+    for(var gx=Math.ceil(minx/90)*90; gx<maxx; gx+=90) g+='<line x1="'+gx+'" y1="'+(miny-900)+'" x2="'+gx+'" y2="'+(maxy+900)+'" class="gl"/>';
+    for(var gy=Math.ceil(miny/80)*80; gy<maxy; gy+=80) g+='<line x1="'+(minx-900)+'" y1="'+gy+'" x2="'+(maxx+900)+'" y2="'+gy+'" class="gl"/>';
+
+    // parks (approximate footprints)
+    function rect(lat,lng,wm,hm){ // wm east-west metres, hm north-south metres, in the rotated frame
+      var c=pr(lat,lng); return '<rect x="'+(c.x-wm/2).toFixed(0)+'" y="'+(c.y-hm/2).toFixed(0)+'" width="'+wm+'" height="'+hm+'" rx="14" class="park"/>';
+    }
+    var parks=rect(40.7308,-73.9973,200,230)+rect(40.7127,-74.0059,190,250)+rect(40.7080,-74.0126,150,90);
+
+    // streets
+    var broadway=[[40.7050,-74.0138],[40.7079,-74.0118],[40.7134,-74.0072],[40.7189,-74.0018],[40.7254,-73.9967],[40.7300,-73.9930]];
+    var canal=[[40.7228,-74.0100],[40.7224,-74.0079],[40.7158,-73.9937],[40.7140,-73.9900]];
+    function lab(lat,lng,t,rot,cls){ var p=pr(lat,lng); return '<text x="'+p.x.toFixed(0)+'" y="'+p.y.toFixed(0)+'" class="'+(cls||"st")+'" text-anchor="middle" transform="rotate('+(rot||0)+' '+p.x.toFixed(0)+' '+p.y.toFixed(0)+')">'+t+'</text>'; }
+    var streets='<path d="'+path(broadway)+'" class="road"/><path d="'+path(canal)+'" class="road"/>'+
+      lab(40.7160,-74.0033,"BROADWAY",-34)+lab(40.7192,-74.0023,"CANAL ST",29);
+    // neighborhoods
+    var hoods=lab(40.7092,-74.0072,"FINANCIAL DISTRICT",0,"hood")+lab(40.7180,-74.0128,"TRIBECA",0,"hood")+lab(40.7226,-74.0038,"SOHO",0,"hood")+
+      lab(40.7372,-74.0046,"WEST VILLAGE",0,"hood")+lab(40.7335,-73.9880,"EAST VILLAGE",0,"hood")+
+      lab(40.7180,-74.0225,"HUDSON RIVER",-62,"water")+lab(40.7040,-73.9930,"EAST RIVER",29,"water");
+
+    // route + pins
+    var d="M"+P.map(function(p){return p.x.toFixed(0)+","+p.y.toFixed(0);}).join(" L");
+    var mid=(minx+maxx)/2, dots="";
+    etaEls=[];
+    P.forEach(function(p,i){
+      var right = p.x < mid-40;
+      var tx = p.x+(right?64:-64), anchor = right?"start":"end";
+      dots+='<circle cx="'+p.x.toFixed(0)+'" cy="'+p.y.toFixed(0)+'" r="46" class="dot"/>'+
+        '<text x="'+p.x.toFixed(0)+'" y="'+(p.y+17).toFixed(0)+'" text-anchor="middle" class="dn">'+(i+1)+'</text>'+
+        '<text x="'+tx.toFixed(0)+'" y="'+(p.y+2).toFixed(0)+'" text-anchor="'+anchor+'" class="lb">'+STOPS[i].short+'</text>'+
+        '<text x="'+tx.toFixed(0)+'" y="'+(p.y+52).toFixed(0)+'" text-anchor="'+anchor+'" class="eta" data-i="'+i+'"></text>';
+    });
+    var sb=805, sx=maxx-sb-60, sy=maxy-60;
+    el.innerHTML='<svg viewBox="'+minx.toFixed(0)+' '+miny.toFixed(0)+' '+w.toFixed(0)+' '+h.toFixed(0)+'" role="img" aria-label="Illustrated map of the haunted run: nine stops from Trinity Churchyard in the south to White Horse Tavern in the north, finishing in the East Village">'+
+      '<style>.gl{stroke:#241a33;stroke-width:2}.water{fill:#10202e}.shore{fill:none;stroke:#2c4a63;stroke-width:6}.park{fill:#17301f;stroke:#264d33;stroke-width:4}'+
+      '.road{fill:none;stroke:#3a2c4d;stroke-width:22;stroke-linecap:round;stroke-linejoin:round}.road.minor{stroke-width:14}'+
+      '.st{font:600 34px Inter,system-ui,sans-serif;fill:#8d7ea3;letter-spacing:3px}.hood{font:600 40px Inter,system-ui,sans-serif;fill:#43355a;letter-spacing:8px}.water{}'+
+      'text.water{fill:#3d6a8a;font:600 38px Inter,system-ui,sans-serif;letter-spacing:10px}'+
+      '.dot{fill:#ff7a1a;stroke:#1b0d00;stroke-width:6}.dn{font:900 52px Cinzel,Georgia,serif;fill:#1b0d00}'+
+      '.lb{font:600 50px Inter,system-ui,sans-serif;fill:#efe7dc;paint-order:stroke;stroke:#120c1b;stroke-width:14px;stroke-linejoin:round}'+
+      '.eta{font:700 42px Cinzel,Georgia,serif;fill:#ff9d4d;paint-order:stroke;stroke:#120c1b;stroke-width:12px;stroke-linejoin:round}.ax{font:500 40px Inter,system-ui,sans-serif;fill:#a99bb8}</style>'+
+      '<defs><clipPath id="landclip"><path d="'+landPath+'"/></clipPath></defs>'+
+      '<rect x="'+(minx-6000)+'" y="'+(miny-6000)+'" width="'+(w+12000)+'" height="'+(h+12000)+'" style="fill:#0e1d2b"/>'+
+      '<path d="'+landPath+'" style="fill:#150e1f"/><g clip-path="url(#landclip)">'+g+'</g><path d="'+shorePath+'" class="shore"/>'+
+      parks+streets+hoods+
+      '<path d="'+d+'" fill="none" stroke="#ff7a1a" stroke-width="12" stroke-dasharray="30 22" stroke-linecap="round" stroke-linejoin="round" opacity=".9"/>'+dots+
+      '<text x="'+(minx+170)+'" y="'+(miny+90)+'" class="ax">N ↑ (map turned 29° to match the street grid)</text>'+
+      '<line x1="'+sx+'" y1="'+sy+'" x2="'+(sx+sb)+'" y2="'+sy+'" stroke="#a99bb8" stroke-width="8"/>'+
+      '<text x="'+(sx+sb/2)+'" y="'+(sy-18)+'" text-anchor="middle" class="ax">0.5 mi</text></svg>';
+    el.querySelectorAll(".eta").forEach(function(t){ etaEls[+t.dataset.i]=t; });
+    $("routeSrc").textContent="Illustrated mockup: stops are at their true coordinates; shorelines, parks and major streets are approximate. The dashed line links stops, not street paths.";
+  }
+
+  // ---------- go ----------
+  buildStops();
+  render();
+  mockMap();
+  updateEtas(schedule());
+})();
+</script>
+
+</body></html>
